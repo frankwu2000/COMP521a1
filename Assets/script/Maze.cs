@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour {
 	public GameObject wall; //basic unit of wall in the maze
+	public GameObject key;
 	private GameObject wall_holder; //the congregation of walls as a single gameobject; easy to manipulate
 	public float wallLength = 1.0f; //the length of each wall
 	public int xSize = 15; //the number of cells on x-axis
 	public int ySize = 15; //the number of cells on y-axis
 	private Vector3 initial_pos; //the position of first wall in the left bottom corner
 	private Cell[] cells; //data sctructure to hold all cells in the maze
-	private int current_cell; //current selected cell, used in creating the maze
 	private int num_key_room; //total number of key rooms
 
 
@@ -32,6 +32,10 @@ public class Maze : MonoBehaviour {
 		CreateWall ();
 		CreateCells ();
 		CreateMaze ();
+
+		if(num_key_room<3){
+			CreateMaze ();
+		}
 		wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
 		setkeys ();
 	}
@@ -119,33 +123,36 @@ public class Maze : MonoBehaviour {
 
 	void CreateMaze(){
 		num_key_room = 0;
-		current_cell = 0;
+		int current_cell = 0;
 		//break wall of entrance ( entrance of maze)
 		if (current_cell == 0) {
 			breakwall (0,current_cell);
 		}
 
 		int time_to_break = 1;
+		int safe_lock = 0;
 
-		while(current_cell%xSize < xSize-1){
-			
+		while(current_cell%xSize < xSize-1 && safe_lock<1000){
+			safe_lock++;
 			cells [current_cell].visited = true;
 			int[] neighbour = GiveMeNeighbour (current_cell);
 			System.Random rnd = new System.Random();
-			int random = rnd.Next(1,101); 
-			//Debug.Log ("random: "+random);
+
+
 			//Debug.Log ("current cell: "+current_cell);
-			int prob_up = rnd.Next(30,90);
-			int prob_down = rnd.Next(50,90);
-			int prob_right = rnd.Next(60,80);
+//			int prob_up = rnd.Next(30,90);
+//			int prob_down = rnd.Next(50,90);
+//			int prob_right = rnd.Next(60,80);
 			//Debug.Log ("prob_up: "+prob_up);
 			//Debug.Log ("prob_down: "+prob_down);
 
 			//breakwall
 			if ( time_to_break % (xSize/3) == 0 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room<3) {
 				int break_room = 0;
+				time_to_break++;
+
 				//by 1/4 chance break the left room and set it as key room
-				if (neighbour [0] != xSize * ySize + 1 && rnd.Next (1, 101) < 25) {
+				if (neighbour [0] != xSize * ySize + 1 && rnd.Next (0, 4) == 0) {
 					breakwall (0, current_cell);
 					break_room = neighbour [0];
 					cells [break_room].visited = true;
@@ -154,7 +161,7 @@ public class Maze : MonoBehaviour {
 
 				}
 				//by 1/4 chance break the right room and set it as key room
-				else if (neighbour [1] != xSize * ySize + 1 && rnd.Next (1, 101) < 25) {
+				else if (neighbour [1] != xSize * ySize + 1 && rnd.Next (0, 4) == 0) {
 					breakwall (1, current_cell);
 					break_room = neighbour [1];
 					cells [break_room].visited = true;
@@ -162,7 +169,7 @@ public class Maze : MonoBehaviour {
 					num_key_room++;
 				} 
 				//by 1/4 chance break the up room and set it as key room
-				else if (neighbour [3] != xSize * ySize + 1 && rnd.Next (1, 101) < 50) {
+				else if (neighbour [3] != xSize * ySize + 1 && rnd.Next (0, 1) == 0) {
 					breakwall (3, current_cell);
 					break_room = neighbour [3];
 					cells [break_room].visited = true;
@@ -178,32 +185,37 @@ public class Maze : MonoBehaviour {
 					num_key_room++;
 				}
 				if (break_room > 0) {
-					
+
 					Debug.Log ("break_room: " + break_room);
 				}
 			}
 
 			time_to_break++;
-
-			if (neighbour [2] != xSize * ySize + 1 && random < prob_up && !cells[neighbour[2]].visited ) {
+			int random = rnd.Next(0,3); 
+			Debug.Log ("");
+//
+			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
 				//break up wall
 				breakwall (2,current_cell);
 				current_cell = neighbour [2];
-
-			} else if (neighbour [3] != xSize * ySize + 1 && random < prob_down && !cells[neighbour[3]].visited ) {
+			
+			} else if (neighbour [3] != xSize * ySize + 1 && random == 1 && !cells[neighbour[3]].visited ) {
 				//break down wall
 				breakwall (3,current_cell);
 				current_cell = neighbour [3];
 
 
 
-			} else if (neighbour [1] != xSize * ySize + 1 && random < prob_right&& !cells[neighbour[1]].visited ) {
+			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
 				//break right wall
 				breakwall (1,current_cell);
 				current_cell = neighbour [1];
 
 
 			}
+
+
+
 		}
 		//get to the exit
 		if(current_cell/xSize!=ySize-1){
@@ -284,11 +296,10 @@ public class Maze : MonoBehaviour {
 
 		//get keyroom coordinate
 		for(int i =0 ;i<keyrooms.Length;i++){
-			Vector3 keyposition = new Vector3 (keyrooms[i].left.transform.position.x+0.5f , 1 , keyrooms[i].left.transform.position.z);
+			Vector3 keyposition = new Vector3 (keyrooms[i].left.transform.position.x+0.5f , 0.5f , keyrooms[i].left.transform.position.z);
 			//sphere.transform.position = keyposition;
-			GameObject sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			sphere1.transform.position = keyposition;
-			sphere1.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
+			GameObject sphere1 = Instantiate (key, keyposition, Quaternion.identity) as GameObject;
+
 		}
 
 
