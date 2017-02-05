@@ -2,8 +2,16 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/script/Maze.cs">
     <Files>
+<<<<<<< HEAD
+<<<<<<< HEAD
       <File FileName="Assets/script/Maze.cs" Line="253" Column="102" />
       <File FileName="Assets/script/Keys_collect.cs" Line="1" Column="1" />
+=======
+      <File FileName="Assets/script/Maze.cs" Line="334" Column="5" />
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+      <File FileName="Assets/script/Maze.cs" Line="334" Column="5" />
+>>>>>>> parent of 04338ea... just fix some file misplace
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

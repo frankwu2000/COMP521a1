@@ -12,8 +12,14 @@ public class Maze : MonoBehaviour {
 	public int ySize = 15; //the number of cells on y-axis
 	private Vector3 initial_pos; //the position of first wall in the left bottom corner
 	public Cell[] cells; //data sctructure to hold all cells in the maze
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 	//private Cell[] cells; //data sctructure to hold all cells in the maze
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
 	private int num_key_room; //total number of key rooms
 
 	//Boulder
@@ -74,9 +80,15 @@ public class Maze : MonoBehaviour {
 		public bool key_room;
 		public Vector3 cellPosition;
 	}
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
 
 
 	// create walls for the maze
@@ -234,7 +246,15 @@ public class Maze : MonoBehaviour {
 
 			time_to_break++;
 			int random = rnd.Next(0,3); 
+<<<<<<< HEAD
+<<<<<<< HEAD
 		//	Debug.Log ("");
+=======
+			Debug.Log ("");
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+			Debug.Log ("");
+>>>>>>> parent of 04338ea... just fix some file misplace
 			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
 
 				//save the next cell's position
@@ -254,11 +274,29 @@ public class Maze : MonoBehaviour {
 				cells[neighbour[3]].cellPosition.x = cells[neighbour[3]].up.transform.position.x ;
 				cells[neighbour[3]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f ;
 				cells[neighbour[3]].cellPosition.z = cells[neighbour[3]].up.transform.position.z - wallLength/2 ;
+<<<<<<< HEAD
+<<<<<<< HEAD
 				//break down wall
 				breakwall (3,current_cell);
 				current_cell = neighbour [3];
 			}
 				 else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
+=======
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
+
+				//break down wall
+				breakwall (3,current_cell);
+				current_cell = neighbour [3];
+			//	num_general_room++;
+
+
+
+			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
+<<<<<<< HEAD
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
 				//save the next cell's position
 				cells[neighbour[1]].cellPosition.x = cells[neighbour[1]].up.transform.position.x ;
 				cells[neighbour[1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
@@ -365,8 +403,14 @@ public class Maze : MonoBehaviour {
 			//sphere.transform.position = keyposition;
 			GameObject sphere1 = Instantiate (key, keyposition, Quaternion.identity, key_holder.transform) as GameObject;
 			sphere1.tag = "key";
+<<<<<<< HEAD
+<<<<<<< HEAD
 			//sphere.transform.position = keyposition;
 		
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
+=======
+>>>>>>> parent of 04338ea... just fix some file misplace
 		}
 
 
