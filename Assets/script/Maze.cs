@@ -10,16 +10,10 @@ public class Maze : MonoBehaviour {
 	public float wallLength = 1.0f; //the length of each wall
 	public int xSize = 15; //the number of cells on x-axis
 	public int ySize = 15; //the number of cells on y-axis
-	private Vector3 initial_pos; //the position of first wall in the left bottom corner
 	public Cell[] cells; //data sctructure to hold all cells in the maze
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 	//private Cell[] cells; //data sctructure to hold all cells in the maze
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
 	private int num_key_room; //total number of key rooms
 
 	//Boulder
@@ -51,9 +45,9 @@ public class Maze : MonoBehaviour {
 		CreateCells ();
 		CreateMaze ();
 
-		if(num_key_room<3){
-			CreateMaze ();
-		}
+//		if(num_key_room<3){
+//			CreateMaze ();
+//		}
 		wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
 		wall_holder.transform.localPosition += new Vector3 (0f, 21f, 0f);
 		setkeys ();
@@ -80,16 +74,6 @@ public class Maze : MonoBehaviour {
 		public bool key_room;
 		public Vector3 cellPosition;
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
-
 
 	// create walls for the maze
 	void CreateWall(){
@@ -98,15 +82,14 @@ public class Maze : MonoBehaviour {
 
 		//maze center at (0,0,0)
 		//the first wall will be the wall at bot right corner horizonta
-		initial_pos = new Vector3 ((0-xSize / 2),0f,(0-ySize / 2) + wallLength/2);
+		Vector3 initial_pos = new Vector3 ((0-xSize / 2),0f,(0-ySize / 2) + wallLength/2);
 		Vector3 my_pos = initial_pos;
-		GameObject temp_wall; 
 
 		//for x Axis
 		for (int i = 0; i < ySize; i++) {
 			for (int j = 0; j <= xSize; j++) {
 				my_pos = new Vector3 (initial_pos.x + (j * wallLength) , 0f, initial_pos.z + (i * wallLength));
-				temp_wall = Instantiate (wall, my_pos, Quaternion.identity,wall_holder.transform) as GameObject;
+				Instantiate (wall, my_pos, Quaternion.identity,wall_holder.transform);
 
 			}
 		}
@@ -115,7 +98,7 @@ public class Maze : MonoBehaviour {
 		for (int i = 0; i <= ySize; i++) {
 			for (int j = 0; j < xSize; j++) {
 				my_pos = new Vector3 (initial_pos.x + (j * wallLength)+wallLength/2, 0f, initial_pos.z + (i * wallLength) - wallLength/2 );
-				temp_wall = Instantiate (wall, my_pos, Quaternion.Euler(0.0f,90f,0.0f),wall_holder.transform) as GameObject;
+				Instantiate (wall, my_pos, Quaternion.Euler(0.0f,90f,0.0f),wall_holder.transform);
 			}
 		}
 	}
@@ -246,16 +229,9 @@ public class Maze : MonoBehaviour {
 
 			time_to_break++;
 			int random = rnd.Next(0,3); 
-<<<<<<< HEAD
-<<<<<<< HEAD
-		//	Debug.Log ("");
-=======
-			Debug.Log ("");
->>>>>>> parent of 04338ea... just fix some file misplace
-=======
-			Debug.Log ("");
->>>>>>> parent of 04338ea... just fix some file misplace
-			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
+			Debug.Log ("random: "+random);
+
+			if (neighbour [2] != xSize * ySize + 1 && random == 0 && !cells[neighbour[2]].visited ) {
 
 				//save the next cell's position
 				cells[neighbour[2]].cellPosition.x = cells[neighbour[2]].up.transform.position.x ;
@@ -274,29 +250,15 @@ public class Maze : MonoBehaviour {
 				cells[neighbour[3]].cellPosition.x = cells[neighbour[3]].up.transform.position.x ;
 				cells[neighbour[3]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f ;
 				cells[neighbour[3]].cellPosition.z = cells[neighbour[3]].up.transform.position.z - wallLength/2 ;
-<<<<<<< HEAD
-<<<<<<< HEAD
-				//break down wall
-				breakwall (3,current_cell);
-				current_cell = neighbour [3];
-			}
-				 else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
-=======
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
 
 				//break down wall
 				breakwall (3,current_cell);
 				current_cell = neighbour [3];
-			//	num_general_room++;
-
+			
 
 
 			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
-<<<<<<< HEAD
->>>>>>> parent of 04338ea... just fix some file misplace
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
+
 				//save the next cell's position
 				cells[neighbour[1]].cellPosition.x = cells[neighbour[1]].up.transform.position.x ;
 				cells[neighbour[1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
@@ -315,16 +277,16 @@ public class Maze : MonoBehaviour {
 		//get to the exit
 		if(current_cell/xSize!=ySize-1){
 			for (int i = 0; i < ySize; i++) {
-				int[] neighbour = GiveMeNeighbour (current_cell);
-				if(neighbour [2] != xSize * ySize + 1) {
+				int[] neighbour2 = GiveMeNeighbour (current_cell);
+				if(neighbour2 [2] != xSize * ySize + 1) {
 					//save the next cell's position
-					cells[neighbour[2]].cellPosition.x = cells[neighbour[2]].up.transform.position.x ;
-					cells[neighbour[2]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
-					cells[neighbour[2]].cellPosition.z = cells[neighbour[2]].up.transform.position.z - wallLength/2 ;
+					cells[neighbour2[2]].cellPosition.x = cells[neighbour2[2]].up.transform.position.x ;
+					cells[neighbour2[2]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
+					cells[neighbour2[2]].cellPosition.z = cells[neighbour2[2]].up.transform.position.z - wallLength/2 ;
 
 					//break up wall
 					breakwall (2,current_cell);
-					current_cell = neighbour [2];
+					current_cell = neighbour2 [2];
 			//		num_general_room++;
 				}
 			}
@@ -398,19 +360,11 @@ public class Maze : MonoBehaviour {
 		}
 
 		//get keyroom coordinate
-		for(int i =0 ;i<keyrooms.Length;i++){
-			Vector3 keyposition = new Vector3 (keyrooms[i].left.transform.position.x+0.5f , 20.5f , keyrooms[i].left.transform.position.z);
+		for (int i = 0; i < keyrooms.Length; i++) {
+			Vector3 keyposition = new Vector3 (keyrooms [i].left.transform.position.x + 0.5f, 20.5f, keyrooms [i].left.transform.position.z);
 			//sphere.transform.position = keyposition;
 			GameObject sphere1 = Instantiate (key, keyposition, Quaternion.identity, key_holder.transform) as GameObject;
 			sphere1.tag = "key";
-<<<<<<< HEAD
-<<<<<<< HEAD
-			//sphere.transform.position = keyposition;
-		
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
-=======
->>>>>>> parent of 04338ea... just fix some file misplace
 		}
 
 
