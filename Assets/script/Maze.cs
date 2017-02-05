@@ -31,7 +31,10 @@ public class Maze : MonoBehaviour {
 	void Update () {
 		//press Q to generate a new maze
 		if(Input.GetKeyDown(KeyCode.Q)){
-			RestartGame ();
+			Destroy (wall_holder);
+			Destroy (key_holder);
+			num_key_room = 0;
+			StartGame ();
 		}
 	}
 
@@ -53,10 +56,7 @@ public class Maze : MonoBehaviour {
 	}
 
 	void RestartGame(){
-		Destroy (wall_holder);
-		Destroy (key_holder);
-		num_key_room = 0;
-		StartGame ();
+		
 	}
 
 
@@ -234,7 +234,7 @@ public class Maze : MonoBehaviour {
 
 			time_to_break++;
 			int random = rnd.Next(0,3); 
-			Debug.Log ("");
+		//	Debug.Log ("");
 			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
 
 				//save the next cell's position
@@ -254,22 +254,11 @@ public class Maze : MonoBehaviour {
 				cells[neighbour[3]].cellPosition.x = cells[neighbour[3]].up.transform.position.x ;
 				cells[neighbour[3]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f ;
 				cells[neighbour[3]].cellPosition.z = cells[neighbour[3]].up.transform.position.z - wallLength/2 ;
-			}
-//
-			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
-				//break up wall
-				breakwall (2,current_cell);
-				current_cell = neighbour [2];
-			
-			} else if (neighbour [3] != xSize * ySize + 1 && random == 1 && !cells[neighbour[3]].visited ) {
 				//break down wall
 				breakwall (3,current_cell);
 				current_cell = neighbour [3];
-			//	num_general_room++;
-
-
-
-			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
+			}
+				 else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
 				//save the next cell's position
 				cells[neighbour[1]].cellPosition.x = cells[neighbour[1]].up.transform.position.x ;
 				cells[neighbour[1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
