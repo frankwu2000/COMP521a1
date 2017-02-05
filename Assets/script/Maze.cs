@@ -11,11 +11,9 @@ public class Maze : MonoBehaviour {
 	public int xSize = 15; //the number of cells on x-axis
 	public int ySize = 15; //the number of cells on y-axis
 	private Vector3 initial_pos; //the position of first wall in the left bottom corner
-<<<<<<< HEAD
 	public Cell[] cells; //data sctructure to hold all cells in the maze
-=======
-	private Cell[] cells; //data sctructure to hold all cells in the maze
->>>>>>> origin/master
+
+	//private Cell[] cells; //data sctructure to hold all cells in the maze
 	private int num_key_room; //total number of key rooms
 
 	//Boulder
@@ -33,10 +31,7 @@ public class Maze : MonoBehaviour {
 	void Update () {
 		//press Q to generate a new maze
 		if(Input.GetKeyDown(KeyCode.Q)){
-			Destroy (wall_holder);
-			Destroy (key_holder);
-			num_key_room = 0;
-			StartGame ();
+			RestartGame ();
 		}
 	}
 
@@ -55,17 +50,13 @@ public class Maze : MonoBehaviour {
 		setkeys ();
 		//setBoulder ();
 
-		//set GUI number of keys
-		OnGUI();
-
-	}
-
-	void OnGUI(){
-		
 	}
 
 	void RestartGame(){
-		
+		Destroy (wall_holder);
+		Destroy (key_holder);
+		num_key_room = 0;
+		StartGame ();
 	}
 
 
@@ -81,25 +72,11 @@ public class Maze : MonoBehaviour {
 		public GameObject right;
 		public GameObject down;
 		public bool key_room;
-<<<<<<< HEAD
 		public Vector3 cellPosition;
-=======
 	}
 
 
-	// Use this for initialization
-	void Start () {
-		CreateWall ();
-		CreateCells ();
-		CreateMaze ();
 
-		if(num_key_room<3){
-			CreateMaze ();
-		}
-		wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
-		setkeys ();
->>>>>>> origin/master
-	}
 
 
 	// create walls for the maze
@@ -258,7 +235,6 @@ public class Maze : MonoBehaviour {
 			time_to_break++;
 			int random = rnd.Next(0,3); 
 			Debug.Log ("");
-<<<<<<< HEAD
 			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
 
 				//save the next cell's position
@@ -278,8 +254,7 @@ public class Maze : MonoBehaviour {
 				cells[neighbour[3]].cellPosition.x = cells[neighbour[3]].up.transform.position.x ;
 				cells[neighbour[3]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f ;
 				cells[neighbour[3]].cellPosition.z = cells[neighbour[3]].up.transform.position.z - wallLength/2 ;
-
-=======
+			}
 //
 			if (neighbour [2] != xSize * ySize + 1 && random ==0 && !cells[neighbour[2]].visited ) {
 				//break up wall
@@ -287,7 +262,6 @@ public class Maze : MonoBehaviour {
 				current_cell = neighbour [2];
 			
 			} else if (neighbour [3] != xSize * ySize + 1 && random == 1 && !cells[neighbour[3]].visited ) {
->>>>>>> origin/master
 				//break down wall
 				breakwall (3,current_cell);
 				current_cell = neighbour [3];
@@ -296,14 +270,11 @@ public class Maze : MonoBehaviour {
 
 
 			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
-<<<<<<< HEAD
 				//save the next cell's position
 				cells[neighbour[1]].cellPosition.x = cells[neighbour[1]].up.transform.position.x ;
 				cells[neighbour[1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
 				cells[neighbour[1]].cellPosition.z = cells[neighbour[1]].up.transform.position.z - wallLength/2 ;
 
-=======
->>>>>>> origin/master
 				//break right wall
 				breakwall (1,current_cell);
 				current_cell = neighbour [1];
@@ -311,10 +282,9 @@ public class Maze : MonoBehaviour {
 
 
 			}
-
-
-
 		}
+
+
 		//get to the exit
 		if(current_cell/xSize!=ySize-1){
 			for (int i = 0; i < ySize; i++) {
@@ -402,17 +372,12 @@ public class Maze : MonoBehaviour {
 
 		//get keyroom coordinate
 		for(int i =0 ;i<keyrooms.Length;i++){
-<<<<<<< HEAD
 			Vector3 keyposition = new Vector3 (keyrooms[i].left.transform.position.x+0.5f , 20.5f , keyrooms[i].left.transform.position.z);
 			//sphere.transform.position = keyposition;
 			GameObject sphere1 = Instantiate (key, keyposition, Quaternion.identity, key_holder.transform) as GameObject;
 			sphere1.tag = "key";
-=======
-			Vector3 keyposition = new Vector3 (keyrooms[i].left.transform.position.x+0.5f , 0.5f , keyrooms[i].left.transform.position.z);
 			//sphere.transform.position = keyposition;
-			GameObject sphere1 = Instantiate (key, keyposition, Quaternion.identity) as GameObject;
-
->>>>>>> origin/master
+		
 		}
 
 
