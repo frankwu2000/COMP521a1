@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Maze : MonoBehaviour {
 	public GameObject wall; //basic unit of wall in the maze
@@ -12,29 +14,35 @@ public class Maze : MonoBehaviour {
 	public int ySize = 15; //the number of cells on y-axis
 	public Cell[] cells; //data sctructure to hold all cells in the maze
 
-
 	//private Cell[] cells; //data sctructure to hold all cells in the maze
-	private int num_key_room; //total number of key rooms
+	public int num_key_room; //total number of key rooms
 
 	//Boulder
 	public GameObject boulder;
 	public Rigidbody boulder_rigid;
 
+	//bug Reporter
+	public Text bugtext;
 
 	// Use this for initialization
 	void Start () {
 		StartGame ();
+		if(num_key_room<3){
+			bugtext.text = "Not enough key rooms! Press Q to restart the game!";
+		}
 
 	}
 
 	// Update is called once per frame
 	void Update () {
+		if(num_key_room<3){
+			
+			bugtext.text = "Not enough key rooms! Press Q to restart the game!";
+		}
 		//press Q to generate a new maze
 		if(Input.GetKeyDown(KeyCode.Q)){
-			Destroy (wall_holder);
-			Destroy (key_holder);
-			num_key_room = 0;
-			StartGame ();
+			RestartGame ();
+
 		}
 	}
 
@@ -45,9 +53,6 @@ public class Maze : MonoBehaviour {
 		CreateCells ();
 		CreateMaze ();
 
-//		if(num_key_room<3){
-//			CreateMaze ();
-//		}
 		wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
 		wall_holder.transform.localPosition += new Vector3 (0f, 21f, 0f);
 		setkeys ();
@@ -56,7 +61,11 @@ public class Maze : MonoBehaviour {
 	}
 
 	void RestartGame(){
-		
+		Destroy (wall_holder);
+		Destroy (key_holder);
+		bugtext.text = "";
+		num_key_room = 0;
+		StartGame ();
 	}
 
 
@@ -166,57 +175,60 @@ public class Maze : MonoBehaviour {
 
 		}
 
-		int time_to_break = 1;
+		int time_to_break = 0;
 		int safe_lock = 0;
 
-		while(current_cell%xSize < xSize-1 && safe_lock<1000){
+		while (current_cell % xSize < xSize - 1 && safe_lock < 1000) {
 			safe_lock++;
 			cells [current_cell].visited = true;
 			int[] neighbour = GiveMeNeighbour (current_cell);
-			System.Random rnd = new System.Random();
 
+//			//go up in the first column
+//			if (current_cell % xSize == 0 && current_cell / xSize <= ySize / 4) {
+//				breakwall (2, current_cell);
+//				current_cell = neighbour [2];
+//				cells [current_cell].visited = true;
+//				cells [current_cell].cellPosition.x = cells [current_cell].left.transform.position.x + wallLength / 2;
+//				cells [current_cell].cellPosition.y = cells [current_cell].left.transform.position.y - 1f;
+//				cells [current_cell].cellPosition.z = cells [current_cell].left.transform.position.z;
+//				continue;
+//			}
 
-			//Debug.Log ("current cell: "+current_cell);
-//			int prob_up = rnd.Next(30,90);
-//			int prob_down = rnd.Next(50,90);
-//			int prob_right = rnd.Next(60,80);
-			//Debug.Log ("prob_up: "+prob_up);
-			//Debug.Log ("prob_down: "+prob_down);
-
-			//breakwall
-			if ( time_to_break % (xSize/3) == 0 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room<3) {
+			//breakwall to set key roo>
+			if ( (time_to_break % (xSize) == xSize / 2 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room < 3 )|| 
+				(time_to_break % (xSize) == xSize / 3 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room < 3)) {
 				int break_room = 0;
 				time_to_break++;
-
-				//by 1/4 chance break the left room and set it as key room
-				if (neighbour [0] != xSize * ySize + 1 && rnd.Next (0, 4) == 0) {
-					breakwall (0, current_cell);
-					break_room = neighbour [0];
+				//Debug.Log (time_to_break);
+				// break the up room and set it as key room
+				if (neighbour [2] != xSize * ySize + 1 && !cells [neighbour [2]].visited ) {
+					breakwall (2, current_cell);
+					break_room = neighbour [2];
 					cells [break_room].visited = true;
 					cells [break_room].key_room = true;
 					num_key_room++;
 
 				}
-				//by 1/4 chance break the right room and set it as key room
-				else if (neighbour [1] != xSize * ySize + 1 && rnd.Next (0, 4) == 0) {
-					breakwall (1, current_cell);
-					break_room = neighbour [1];
-					cells [break_room].visited = true;
-					cells [break_room].key_room = true;
-					num_key_room++;
-				} 
-				//by 1/4 chance break the up room and set it as key room
-				else if (neighbour [3] != xSize * ySize + 1 && rnd.Next (0, 1) == 0) {
+				//break the down room and set it as key room
+				else if (neighbour [3] != xSize * ySize + 1 && !cells [neighbour [3]].visited) {
 					breakwall (3, current_cell);
 					break_room = neighbour [3];
 					cells [break_room].visited = true;
 					cells [break_room].key_room = true;
 					num_key_room++;
 				} 
-				//break the down room and set it as key room
-				else if (neighbour [2] != xSize * ySize + 1) {
-					breakwall (2, current_cell);
-					break_room = neighbour [2];
+				//break the left room and set it as key room
+				else if (neighbour [0] != xSize * ySize + 1 && !cells [neighbour [0]].visited) {
+					breakwall (0, current_cell);
+					break_room = neighbour [0];
+					cells [break_room].visited = true;
+					cells [break_room].key_room = true;
+					num_key_room++;
+				} 
+				//break the right room and set it as key room
+				else if (neighbour [1] != xSize * ySize + 1 && !cells [neighbour [1]].visited) {
+					breakwall (1, current_cell);
+					break_room = neighbour [1];
 					cells [break_room].visited = true;
 					cells [break_room].key_room = true;
 					num_key_room++;
@@ -228,48 +240,47 @@ public class Maze : MonoBehaviour {
 			}
 
 			time_to_break++;
-			int random = rnd.Next(0,3); 
-			Debug.Log ("random: "+random);
+			int random = Random.Range (0, 4);
+			//Debug.Log ("random: "+random);
 
-			if (neighbour [2] != xSize * ySize + 1 && random == 0 && !cells[neighbour[2]].visited ) {
-
-				//save the next cell's position
-				cells[neighbour[2]].cellPosition.x = cells[neighbour[2]].up.transform.position.x ;
-				cells[neighbour[2]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f;
-				cells[neighbour[2]].cellPosition.z = cells[neighbour[2]].up.transform.position.z - wallLength/2 ;
-
-				//break up wall
-				breakwall (2,current_cell);
-				current_cell = neighbour [2];
-
-				//num_general_room++;
-			
-			} else if (neighbour [3] != xSize * ySize + 1 && random == 1 && !cells[neighbour[3]].visited ) {
+			if (neighbour [1] != xSize * ySize + 1 && random == 3 && !cells [neighbour [1]].visited) {
 
 				//save the next cell's position
-				cells[neighbour[3]].cellPosition.x = cells[neighbour[3]].up.transform.position.x ;
-				cells[neighbour[3]].cellPosition.y =cells [current_cell].down.transform.position.y - 1f ;
-				cells[neighbour[3]].cellPosition.z = cells[neighbour[3]].up.transform.position.z - wallLength/2 ;
+				cells [neighbour [1]].cellPosition.x = cells [neighbour [1]].up.transform.position.x;
+				cells [neighbour [1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
+				cells [neighbour [1]].cellPosition.z = cells [neighbour [1]].up.transform.position.z - wallLength / 2;
+
+				//break right wall
+				breakwall (1, current_cell);
+				current_cell = neighbour [1];
+				//	num_general_room++;
+
+			} else if (neighbour [3] != xSize * ySize + 1 && random == 2 && !cells [neighbour [3]].visited) {
+
+				//save the next cell's position
+				cells [neighbour [3]].cellPosition.x = cells [neighbour [3]].up.transform.position.x;
+				cells [neighbour [3]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
+				cells [neighbour [3]].cellPosition.z = cells [neighbour [3]].up.transform.position.z - wallLength / 2;
 
 				//break down wall
-				breakwall (3,current_cell);
+				breakwall (3, current_cell);
 				current_cell = neighbour [3];
 			
 
 
-			} else if (neighbour [1] != xSize * ySize + 1 && random == 2 && !cells[neighbour[1]].visited ) {
+			} else if (neighbour [2] != xSize * ySize + 1 && random <= 1 && !cells [neighbour [2]].visited) {
 
 				//save the next cell's position
-				cells[neighbour[1]].cellPosition.x = cells[neighbour[1]].up.transform.position.x ;
-				cells[neighbour[1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
-				cells[neighbour[1]].cellPosition.z = cells[neighbour[1]].up.transform.position.z - wallLength/2 ;
+				cells [neighbour [2]].cellPosition.x = cells [neighbour [2]].up.transform.position.x;
+				cells [neighbour [2]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
+				cells [neighbour [2]].cellPosition.z = cells [neighbour [2]].up.transform.position.z - wallLength / 2;
 
-				//break right wall
-				breakwall (1,current_cell);
-				current_cell = neighbour [1];
-			//	num_general_room++;
+				//break up wall
+				breakwall (2, current_cell);
+				current_cell = neighbour [2];
 
-
+				//num_general_room++;
+		
 			}
 		}
 

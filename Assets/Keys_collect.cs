@@ -4,24 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Keys_collect : MonoBehaviour {
-
+	
 	public int keys;
 	public Text ScoreText;
+	public Text VictoryText;
 
 
 	// Use this for initialization
 	void Start () {
 		keys = 0;
 		setScoreText ();
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
+
 		//restart the game
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			//Destroy (ScoreText);
 			Start ();
-			gameObject.transform.position = new Vector3 (-10,22,-12);
+			gameObject.transform.position = new Vector3 (-37.66f,42f,-12f);
 		}
 	}
 
@@ -30,6 +33,20 @@ public class Keys_collect : MonoBehaviour {
 			other.gameObject.SetActive (false);
 			keys++;
 			setScoreText ();
+		}
+		if (other.gameObject.CompareTag ("Finish")) {
+			if (keys == 3) {
+				//victory
+				other.gameObject.SetActive (false);
+				VictoryText.text = "Good Job You Win! Press Q to restart the game!";
+			} else {
+				//not enough keys
+				ScoreText.text = "Not Enough Keys! " + keys + " keys now";
+
+				VictoryText.text = "";
+
+			}
+
 		}
 	}
 
