@@ -19,13 +19,36 @@ public class Maze : MonoBehaviour {
 	//private Cell[] cells; //data sctructure to hold all cells in the maze
 	public int num_key_room; //total number of key rooms
 
-	//Boulder
+	//Boulder1
 	public GameObject boulder;
 	public int Boulder_Move_count;
 	public Rigidbody boulder_rigid;
 
+	//Boulder2
+	public GameObject boulder2;
+	public int Boulder_Move_count2;
+	public Rigidbody boulder_rigid2;
+
+	//Boulder3
+	public GameObject boulder3;
+	public int Boulder_Move_count3;
+	public Rigidbody boulder_rigid3;
+
+	//Boulder4
+	public GameObject boulder4;
+	public int Boulder_Move_count4;
+	public Rigidbody boulder_rigid4;
+
+	//fixed update 
+	//every 5 sec spawn a boulder
+	public float period = 0.5f;
+	int fixcount = 0;
+
+
 	//bug Reporter
 	public Text bugtext;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -37,29 +60,32 @@ public class Maze : MonoBehaviour {
 	}
 
 
-	void FixedUpdate(){
-		Time.fixedDeltaTime = 0.5f;
-		//boulder 
-
-		if (Boulder_Move_count < Boulder_position.Length) {
-			//Vector3 force = Boulder_position [Boulder_Move_count] - boulder.transform.position;
-			//boulder_rigid.AddForce (force);
-			boulder.transform.position = Boulder_position [Boulder_Move_count];
-			//boulder_rigid.velocity = force;
-
-			Boulder_Move_count++;	
-		} else {
-			Boulder_Move_count = 0;
-			boulder.transform.position = Boulder_position [Boulder_Move_count];
-		}
-
-
-
-	}
+//	void FixedUpdate(){
+//		//Time.fixedDeltaTime = Deltatime;
+//		LaunchBoulder();
+////		if(fixcount >= 10){
+////			//after 5 sec
+////			//boulder 2
+////			LaunchBoulder2();
+////		}
+////		if(fixcount >= 20){
+////			//after 5 sec
+////			//boulder 3
+////			LaunchBoulder3();
+////		}
+////		if(fixcount >= 30){
+////			//after 5 sec
+////			//boulder 4
+////			LaunchBoulder4();
+////		}
+//		fixcount++;
+//	}
 
 	// Update is called once per frame
 	void Update () {
 		
+
+
 		//BUG report
 		if(num_key_room<3){
 			
@@ -74,8 +100,17 @@ public class Maze : MonoBehaviour {
 	}
 
 
+	public void boulder_Start(){
+		Debug.Log ("boudler Start");
+		InvokeRepeating("LaunchBoulder", 0f, 0.5f);
+		InvokeRepeating("LaunchBoulder2", 5f, 0.5f);
+		InvokeRepeating("LaunchBoulder3", 10f, 0.5f);
+		InvokeRepeating("LaunchBoulder4", 15f, 0.5f);
+	}
+
 
 	void StartGame(){
+		
 		CreateWall ();
 		CreateCells ();
 		CreateMaze ();
@@ -86,9 +121,7 @@ public class Maze : MonoBehaviour {
 
 		//boulder
 		setBoulder ();
-		Boulder_Move_count=0;
-		boulder.transform.position = Boulder_position [0];
-		boulder_rigid = boulder.GetComponent<Rigidbody>();
+
 
 	}
 
@@ -96,9 +129,15 @@ public class Maze : MonoBehaviour {
 		Destroy (wall_holder);
 		Destroy (key_holder);
 
+		Destroy (boulder);
+		Destroy (boulder2);
+		Destroy (boulder3);
+		Destroy (boulder4);
+
+
 		bugtext.text = "";
 		num_key_room = 0;
-		//Boulder_Move_count=0;
+
 		StartGame ();
 	}
 
@@ -407,10 +446,6 @@ public class Maze : MonoBehaviour {
 			num_visit++;
 		}
 
-
-
-
-
 //		num_visit = 0;
 //		for(int i =0;i<cells.Length;i++){
 //			if (cells [i].visited && !cells [i].key_room) {
@@ -418,9 +453,7 @@ public class Maze : MonoBehaviour {
 //				num_visit++;
 //			}
 //		}
-		Vector3 Initial_cell_pos = getCellPosition(0);
-
-
+	
 		Boulder_position = new Vector3[visit_cell.Length];
 
 		for(int i = 0;i<visit_cell.Length;i++){
@@ -428,26 +461,75 @@ public class Maze : MonoBehaviour {
 
 			Boulder_position[i] = getCellPosition (visit_cell[i]);
 		}
+		//set boulder instance
+		Boulder_Move_count=0;
+		Boulder_Move_count2=0;
+		Boulder_Move_count3=0;
+		Boulder_Move_count4=0;
+		//instance boulder 1
+		boulder= Instantiate(boulder,Boulder_position[0],Quaternion.identity) as GameObject;
+		boulder_rigid = boulder.GetComponent<Rigidbody>();
+		//instance boulder 2
+		boulder2 = Instantiate(boulder,new Vector3(0,0,0),Quaternion.identity) as GameObject;
+		boulder_rigid2 = boulder2.GetComponent<Rigidbody>();
+		//instance boulder 3
+		boulder3 = Instantiate(boulder,new Vector3(0,0,0),Quaternion.identity) as GameObject;
+		boulder_rigid3 = boulder3.GetComponent<Rigidbody>();
+		//instance boulder 4
+		boulder4 = Instantiate(boulder,new Vector3(0,0,0),Quaternion.identity) as GameObject;
+		boulder_rigid4 = boulder4.GetComponent<Rigidbody>();
 
-
-	}
-
-
-	//move boulder
-	void BoudlerMove(){
-		
 	}
 
 
 	//given cell number and return the position of the cell centre
 	Vector3 getCellPosition (int cellnum){
-		Vector3 Initial_cell_pos = new Vector3 (-xSize / 2 + wallLength/2, 21f, -ySize / 2 + wallLength/2);
+		Vector3 Initial_cell_pos = new Vector3 (-xSize / 2 + wallLength/2, 20.5f, -ySize / 2 + wallLength/2);
 		int xAxis = cellnum % xSize;
 		int yAxis = cellnum / xSize;
 		return new Vector3 (Initial_cell_pos.x+wallLength*xAxis,Initial_cell_pos.y,Initial_cell_pos.z+wallLength*yAxis);
 
 	}
 
+	void LaunchBoulder(){
+		if (Boulder_Move_count < Boulder_position.Length) {
+			boulder_rigid.MovePosition(Boulder_position [Boulder_Move_count]);
+//			Vector3 force = Boulder_position [Boulder_Move_count] - boulder.transform.position;
+//			boulder_rigid.AddForce (force);
+			Boulder_Move_count++;	
+		} else {
+			Boulder_Move_count = 0;
+			boulder.transform.position = Boulder_position [Boulder_Move_count];
+		}
+	}
 
+	void LaunchBoulder2(){
+		if (Boulder_Move_count2 < Boulder_position.Length) {
+			boulder_rigid2.MovePosition(Boulder_position [Boulder_Move_count2]);
+			Boulder_Move_count2++;	
+		} else {
+			Boulder_Move_count2 = 0;
+			boulder2.transform.position = Boulder_position [Boulder_Move_count2];
+		}
+	}
 
+	void LaunchBoulder3(){
+		if (Boulder_Move_count3 < Boulder_position.Length) {
+			boulder_rigid3.MovePosition(Boulder_position [Boulder_Move_count3]);
+			Boulder_Move_count3++;	
+		} else {
+			Boulder_Move_count3 = 0;
+			boulder3.transform.position = Boulder_position [Boulder_Move_count3];
+		}
+	}
+
+	void LaunchBoulder4(){
+		if (Boulder_Move_count4 < Boulder_position.Length) {
+			boulder_rigid4.MovePosition(Boulder_position [Boulder_Move_count4]);
+			Boulder_Move_count4++;	
+		} else {
+			Boulder_Move_count4 = 0;
+			boulder4.transform.position = Boulder_position [Boulder_Move_count4];
+		}
+	}
 }

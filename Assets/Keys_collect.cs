@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Keys_collect : MonoBehaviour {
-	
+
+
+	public Maze maze_script;
 	public int keys;
 	public Text ScoreText;
 	public Text VictoryText;
@@ -49,6 +51,15 @@ public class Keys_collect : MonoBehaviour {
 
 			}
 
+		}
+		if (other.gameObject.CompareTag ("boulder")) {
+			other.gameObject.SetActive (true);
+			VictoryText.text = "You lose!!! Press Q to restart.";
+		}
+
+		//at entrance of maze, boulder start moving
+		if (other.gameObject.CompareTag ("maze_start_ring")) {
+			maze_script.boulder_Start ();
 		}
 	}
 
