@@ -1,13 +1,13 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/script/Maze.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Standard Assets/Characters/ThirdPersonCharacter/Scripts/ThirdPersonUserControl.cs">
     <Files>
-      <File FileName="Assets/Keys_collect.cs" Line="62" Column="4" />
-      <File FileName="Assets/script/Maze.cs" Line="98" Column="4" />
+      <File FileName="Assets/script/Maze.cs" Line="1" Column="1" />
+      <File FileName="Assets/Keys_collect.cs" Line="62" Column="28" />
       <File FileName="Assets/shooting.cs" Line="22" Column="22" />
       <File FileName="Assets/Standard Assets/Characters/ThirdPersonCharacter/Scripts/ThirdPersonUserControl.cs" Line="38" Column="15" />
-      <File FileName="Assets/bullet_boulder.cs" Line="19" Column="37" />
-      <File FileName="Assets/bullet_collision.cs" Line="18" Column="31" />
+      <File FileName="Assets/bullet_boulder.cs" Line="19" Column="39" />
+      <File FileName="Assets/bullet_collision.cs" Line="12" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
