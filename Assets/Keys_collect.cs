@@ -41,7 +41,6 @@ public class Keys_collect : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Finish")) {
 			if (keys == 3) {
 				//victory
-				other.gameObject.SetActive (false);
 				VictoryText.text = "Good Job You Win! Press Q to restart the game!";
 			} else {
 				//not enough keys

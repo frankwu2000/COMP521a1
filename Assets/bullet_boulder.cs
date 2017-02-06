@@ -14,9 +14,16 @@ public class bullet_boulder : MonoBehaviour {
 		
 	}
 
-	void OnTriggerEnter(Collider other){
-		if (other.gameObject.CompareTag ("boulder")) {
-			other.gameObject.SetActive (false);
+	void OnCollisionEnter(Collision col){
+		if(col.gameObject.CompareTag("boulder")){
+			//col.gameObject.SetActive (false);
+			Destroy(col.gameObject);
 		}
 	}
+//	void OnTriggerEnter(Collider other){
+//		if (other.gameObject.CompareTag ("boulder")) {
+//			other.gameObject.SetActive (false);
+////			Destroy(other.gameObject);
+//		}
+//	}
 }

@@ -100,15 +100,6 @@ public class Maze : MonoBehaviour {
 	}
 
 
-	public void boulder_Start(){
-		Debug.Log ("boudler Start");
-		InvokeRepeating("LaunchBoulder", 0f, 0.5f);
-		InvokeRepeating("LaunchBoulder2", 5f, 0.5f);
-		InvokeRepeating("LaunchBoulder3", 10f, 0.5f);
-		InvokeRepeating("LaunchBoulder4", 15f, 0.5f);
-	}
-
-
 	void StartGame(){
 		
 		CreateWall ();
@@ -122,6 +113,8 @@ public class Maze : MonoBehaviour {
 		//boulder
 
 		setBoulder ();
+		init_boulder ();
+//		boulder_Start ();
 
 
 	}
@@ -140,10 +133,7 @@ public class Maze : MonoBehaviour {
 		num_key_room = 0;
 
 		StartGame ();
-		boulder.SetActive(true);
-		boulder2.SetActive(true);
-		boulder3.SetActive(true);
-		boulder4.SetActive(true);
+
 	}
 
 
@@ -466,6 +456,27 @@ public class Maze : MonoBehaviour {
 
 			Boulder_position[i] = getCellPosition (visit_cell[i]);
 		}
+
+	}
+
+
+	//given cell number and return the position of the cell centre
+	Vector3 getCellPosition (int cellnum){
+		Vector3 Initial_cell_pos = new Vector3 (-xSize / 2 + wallLength/2, 20.5f, -ySize / 2 + wallLength/2);
+		int xAxis = cellnum % xSize;
+		int yAxis = cellnum / xSize;
+		return new Vector3 (Initial_cell_pos.x+wallLength*xAxis,Initial_cell_pos.y,Initial_cell_pos.z+wallLength*yAxis);
+
+	}
+
+
+
+
+	//boulder
+
+
+
+	void init_boulder(){
 		//set boulder instance
 		Boulder_Move_count=0;
 		Boulder_Move_count2=0;
@@ -483,16 +494,6 @@ public class Maze : MonoBehaviour {
 		//instance boulder 4
 		boulder4 = Instantiate(boulder,new Vector3(0,0,0),Quaternion.identity) as GameObject;
 		boulder_rigid4 = boulder4.GetComponent<Rigidbody>();
-
-	}
-
-
-	//given cell number and return the position of the cell centre
-	Vector3 getCellPosition (int cellnum){
-		Vector3 Initial_cell_pos = new Vector3 (-xSize / 2 + wallLength/2, 20.5f, -ySize / 2 + wallLength/2);
-		int xAxis = cellnum % xSize;
-		int yAxis = cellnum / xSize;
-		return new Vector3 (Initial_cell_pos.x+wallLength*xAxis,Initial_cell_pos.y,Initial_cell_pos.z+wallLength*yAxis);
 
 	}
 
@@ -537,4 +538,19 @@ public class Maze : MonoBehaviour {
 			boulder4.transform.position = Boulder_position [Boulder_Move_count4];
 		}
 	}
+
+
+	public void boulder_Start(){
+		Debug.Log ("boudler Start");
+		InvokeRepeating("LaunchBoulder", 0f, 0.5f);
+		InvokeRepeating("LaunchBoulder2", 5f, 0.5f);
+		InvokeRepeating("LaunchBoulder3", 10f, 0.5f);
+		InvokeRepeating("LaunchBoulder4", 15f, 0.5f);
+	}
+
+
+
+
 }
+
+

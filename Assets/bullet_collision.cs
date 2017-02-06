@@ -13,9 +13,14 @@ public class bullet_collision : MonoBehaviour {
 	void Update () {
 		
 	}
-	void OnTriggerEnter(Collider other){
-		if (other.gameObject.CompareTag ("bullet")) {
-			Destroy (other.gameObject);
+//	void OnTriggerEnter(Collider other){
+//		if (other.gameObject.CompareTag ("bullet")) {
+//			Destroy (other.gameObject);
+//		}
+//	}
+	void OnCollisionEnter(Collision col){
+		if(col.gameObject.CompareTag("bullet")){
+			Destroy (col.gameObject);
 		}
 	}
 }
