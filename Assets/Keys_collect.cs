@@ -53,7 +53,6 @@ public class Keys_collect : MonoBehaviour {
 
 		}
 		if (other.gameObject.CompareTag ("boulder")) {
-			other.gameObject.SetActive (true);
 			VictoryText.text = "You lose!!! Press Q to restart.";
 		}
 

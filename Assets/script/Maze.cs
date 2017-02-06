@@ -120,6 +120,7 @@ public class Maze : MonoBehaviour {
 		setkeys ();
 
 		//boulder
+
 		setBoulder ();
 
 
@@ -139,6 +140,10 @@ public class Maze : MonoBehaviour {
 		num_key_room = 0;
 
 		StartGame ();
+		boulder.SetActive(true);
+		boulder2.SetActive(true);
+		boulder3.SetActive(true);
+		boulder4.SetActive(true);
 	}
 
 

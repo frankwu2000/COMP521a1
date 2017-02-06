@@ -57,9 +57,6 @@
      <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
-     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\CameraLogic.cs" />
-     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\Demo.cs" />
-     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\SimpleCharacterControl.cs" />
      <Compile Include="Assets\boulder_script.cs" />
      <Compile Include="Assets\bullet_boulder.cs" />
      <Compile Include="Assets\bullet_collision.cs" />
