@@ -14,6 +14,7 @@ public class Keys_collect : MonoBehaviour {
 	void Start () {
 		keys = 0;
 		setScoreText ();
+		VictoryText.text = "";
 
 	}
 
@@ -23,6 +24,7 @@ public class Keys_collect : MonoBehaviour {
 		//restart the game
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			//Destroy (ScoreText);
+
 			Start ();
 			gameObject.transform.position = new Vector3 (-37.66f,42f,-12f);
 		}

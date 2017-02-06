@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Boulder_Move.cs" />
      <Compile Include="Assets\GameManager.cs" />
      <Compile Include="Assets\Keys_collect.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />

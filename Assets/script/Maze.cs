@@ -13,12 +13,15 @@ public class Maze : MonoBehaviour {
 	public int xSize = 15; //the number of cells on x-axis
 	public int ySize = 15; //the number of cells on y-axis
 	public Cell[] cells; //data sctructure to hold all cells in the maze
+	public Vector3[] Boulder_position;
+
 
 	//private Cell[] cells; //data sctructure to hold all cells in the maze
 	public int num_key_room; //total number of key rooms
 
 	//Boulder
 	public GameObject boulder;
+	public int Boulder_Move_count;
 	public Rigidbody boulder_rigid;
 
 	//bug Reporter
@@ -33,12 +36,36 @@ public class Maze : MonoBehaviour {
 
 	}
 
+
+	void FixedUpdate(){
+		Time.fixedDeltaTime = 0.5f;
+		//boulder 
+
+		if (Boulder_Move_count < Boulder_position.Length) {
+			//Vector3 force = Boulder_position [Boulder_Move_count] - boulder.transform.position;
+			//boulder_rigid.AddForce (force);
+			boulder.transform.position = Boulder_position [Boulder_Move_count];
+			//boulder_rigid.velocity = force;
+
+			Boulder_Move_count++;	
+		} else {
+			Boulder_Move_count = 0;
+			boulder.transform.position = Boulder_position [Boulder_Move_count];
+		}
+
+
+
+	}
+
 	// Update is called once per frame
 	void Update () {
+		
+		//BUG report
 		if(num_key_room<3){
 			
 			bugtext.text = "Not enough key rooms! Press Q to restart the game!";
 		}
+
 		//press Q to generate a new maze
 		if(Input.GetKeyDown(KeyCode.Q)){
 			RestartGame ();
@@ -53,18 +80,25 @@ public class Maze : MonoBehaviour {
 		CreateCells ();
 		CreateMaze ();
 
-		wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
+		//wall_holder.transform.localScale += new Vector3 (0.25f,0.25f,0.25f);
 		wall_holder.transform.localPosition += new Vector3 (0f, 21f, 0f);
 		setkeys ();
-		//setBoulder ();
+
+		//boulder
+		setBoulder ();
+		Boulder_Move_count=0;
+		boulder.transform.position = Boulder_position [0];
+		boulder_rigid = boulder.GetComponent<Rigidbody>();
 
 	}
 
 	void RestartGame(){
 		Destroy (wall_holder);
 		Destroy (key_holder);
+
 		bugtext.text = "";
 		num_key_room = 0;
+		//Boulder_Move_count=0;
 		StartGame ();
 	}
 
@@ -81,7 +115,7 @@ public class Maze : MonoBehaviour {
 		public GameObject right;
 		public GameObject down;
 		public bool key_room;
-		public Vector3 cellPosition;
+		public int next_cell;
 	}
 
 	// create walls for the maze
@@ -169,10 +203,6 @@ public class Maze : MonoBehaviour {
 		//break wall of entrance ( entrance of maze)
 		if (current_cell == 0) {
 			breakwall (0,current_cell);
-			cells[current_cell].cellPosition.x = cells[current_cell].down.transform.position.x ;
-			cells [current_cell].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
-			cells[current_cell].cellPosition.z = cells[current_cell].down.transform.position.z + wallLength/2 ;
-
 		}
 
 		int time_to_break = 0;
@@ -183,18 +213,8 @@ public class Maze : MonoBehaviour {
 			cells [current_cell].visited = true;
 			int[] neighbour = GiveMeNeighbour (current_cell);
 
-//			//go up in the first column
-//			if (current_cell % xSize == 0 && current_cell / xSize <= ySize / 4) {
-//				breakwall (2, current_cell);
-//				current_cell = neighbour [2];
-//				cells [current_cell].visited = true;
-//				cells [current_cell].cellPosition.x = cells [current_cell].left.transform.position.x + wallLength / 2;
-//				cells [current_cell].cellPosition.y = cells [current_cell].left.transform.position.y - 1f;
-//				cells [current_cell].cellPosition.z = cells [current_cell].left.transform.position.z;
-//				continue;
-//			}
 
-			//breakwall to set key roo>
+			//breakwall to set key room
 			if ( (time_to_break % (xSize) == xSize / 2 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room < 3 )|| 
 				(time_to_break % (xSize) == xSize / 3 && current_cell % xSize < xSize - 1 && current_cell % xSize > 1 && current_cell / xSize < ySize - 1 && current_cell / xSize > 1 && num_key_room < 3)) {
 				int break_room = 0;
@@ -244,25 +264,18 @@ public class Maze : MonoBehaviour {
 			//Debug.Log ("random: "+random);
 
 			if (neighbour [1] != xSize * ySize + 1 && random == 3 && !cells [neighbour [1]].visited) {
-
-				//save the next cell's position
-				cells [neighbour [1]].cellPosition.x = cells [neighbour [1]].up.transform.position.x;
-				cells [neighbour [1]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
-				cells [neighbour [1]].cellPosition.z = cells [neighbour [1]].up.transform.position.z - wallLength / 2;
-
+				
+				cells [current_cell].next_cell = neighbour [1];
 				//break right wall
 				breakwall (1, current_cell);
 				current_cell = neighbour [1];
+
 				//	num_general_room++;
 
 			} else if (neighbour [3] != xSize * ySize + 1 && random == 2 && !cells [neighbour [3]].visited) {
 
-				//save the next cell's position
-				cells [neighbour [3]].cellPosition.x = cells [neighbour [3]].up.transform.position.x;
-				cells [neighbour [3]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
-				cells [neighbour [3]].cellPosition.z = cells [neighbour [3]].up.transform.position.z - wallLength / 2;
-
 				//break down wall
+				cells [current_cell].next_cell = neighbour [3];
 				breakwall (3, current_cell);
 				current_cell = neighbour [3];
 			
@@ -270,12 +283,8 @@ public class Maze : MonoBehaviour {
 
 			} else if (neighbour [2] != xSize * ySize + 1 && random <= 1 && !cells [neighbour [2]].visited) {
 
-				//save the next cell's position
-				cells [neighbour [2]].cellPosition.x = cells [neighbour [2]].up.transform.position.x;
-				cells [neighbour [2]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f;
-				cells [neighbour [2]].cellPosition.z = cells [neighbour [2]].up.transform.position.z - wallLength / 2;
-
 				//break up wall
+				cells [current_cell].next_cell = neighbour [2];
 				breakwall (2, current_cell);
 				current_cell = neighbour [2];
 
@@ -288,14 +297,11 @@ public class Maze : MonoBehaviour {
 		//get to the exit
 		if(current_cell/xSize!=ySize-1){
 			for (int i = 0; i < ySize; i++) {
+				cells [current_cell].visited = true;
 				int[] neighbour2 = GiveMeNeighbour (current_cell);
 				if(neighbour2 [2] != xSize * ySize + 1) {
-					//save the next cell's position
-					cells[neighbour2[2]].cellPosition.x = cells[neighbour2[2]].up.transform.position.x ;
-					cells[neighbour2[2]].cellPosition.y = cells [current_cell].down.transform.position.y - 1f ;
-					cells[neighbour2[2]].cellPosition.z = cells[neighbour2[2]].up.transform.position.z - wallLength/2 ;
-
 					//break up wall
+					cells [current_cell].next_cell = neighbour2 [2];
 					breakwall (2,current_cell);
 					current_cell = neighbour2 [2];
 			//		num_general_room++;
@@ -383,34 +389,65 @@ public class Maze : MonoBehaviour {
 	}
 
 
-
+	//set boulder and get boulder future move position.
 	void setBoulder(){
-		//transfer visted cells to a new array 
-		Cell[] visitCells=new Cell[cells.Length];
-		int visit_cells = 0;
+		//transfer visted cells to a new cell array 
+		int num_visit = 0;
 		for(int i =0;i<cells.Length;i++){
 			if (cells [i].visited && !cells [i].key_room) {
-				visitCells[visit_cells] = cells[i];
-			//	Debug.Log (visitCells [visit_cells].cellPosition);
-				visit_cells++;
+				num_visit++;
 			}
 		}
+		int[] visit_cell = new int[num_visit];
+		num_visit = 0;
+		int current_cell = 0;
+		while(current_cell<xSize*ySize-1){
+			visit_cell [num_visit] = cells [current_cell].next_cell;
+			current_cell = cells [current_cell].next_cell;
+			num_visit++;
+		}
 
-		Instantiate (boulder, new Vector3(-8f,20.5f,-8f), Quaternion.identity, wall_holder.transform);
-		boulder_rigid = boulder.GetComponent<Rigidbody> ();
 
 
-		for (int i = 0; i < visitCells.Length; i++) {
-			//if(visitCells[i].cellPosition!=null){
-			Vector3 boulder_move =visitCells[i].cellPosition;
 
-			boulder_rigid.MovePosition (boulder_move);
-			//
 
-		}	
+//		num_visit = 0;
+//		for(int i =0;i<cells.Length;i++){
+//			if (cells [i].visited && !cells [i].key_room) {
+//				visit_cell[num_visit] = i;
+//				num_visit++;
+//			}
+//		}
+		Vector3 Initial_cell_pos = getCellPosition(0);
+
+
+		Boulder_position = new Vector3[visit_cell.Length];
+
+		for(int i = 0;i<visit_cell.Length;i++){
+			//the next position boulder will move to
+
+			Boulder_position[i] = getCellPosition (visit_cell[i]);
+		}
+
+
 	}
-	void fixedUpadate(){
+
+
+	//move boulder
+	void BoudlerMove(){
 		
 	}
+
+
+	//given cell number and return the position of the cell centre
+	Vector3 getCellPosition (int cellnum){
+		Vector3 Initial_cell_pos = new Vector3 (-xSize / 2 + wallLength/2, 21f, -ySize / 2 + wallLength/2);
+		int xAxis = cellnum % xSize;
+		int yAxis = cellnum / xSize;
+		return new Vector3 (Initial_cell_pos.x+wallLength*xAxis,Initial_cell_pos.y,Initial_cell_pos.z+wallLength*yAxis);
+
+	}
+
+
 
 }
